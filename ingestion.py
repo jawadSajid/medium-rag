@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from transformers import AutoModel
 from langchain_community.document_loaders import TextLoader
 from langchain_text_splitters import CharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
@@ -17,7 +18,8 @@ if __name__ == '__main__':
     texts = text_splitter.split_documents(document)
     print(f"created {len(texts)} chunks")
 
-    embeddings = HuggingFaceEmbeddings(model_name="cohere/embed-english-v3.0") 
+    # Make sure the dimentionality matches with the Pinecone embedding model
+    embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-large-en-v1.5")
 
     print("ingesting...")
     PineconeVectorStore.from_documents(texts, embeddings, index_name=os.environ['INDEX_NAME'])
